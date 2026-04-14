@@ -6,13 +6,13 @@ Files are read from /context directory on every request — no restart needed to
 """
 
 import asyncio
-import json
 import logging
 import os
 from pathlib import Path
 
 from mcp.server import Server
 from mcp.server.models import InitializationOptions
+from mcp.server.lowlevel.server import NotificationOptions
 import mcp.server.stdio
 import mcp.types as types
 
@@ -22,16 +22,16 @@ CONTEXT_DIR = Path(os.environ.get("CONTEXT_DIR", "/context"))
 
 # Ordered list of (key, description) pairs
 FILES: list[tuple[str, str]] = [
-    ("identity",                "Who Kenny is — background, expertise, and how he works"),
+    ("identity", "Who Kenny is — background, expertise, and how he works"),
     ("role-and-responsibilities", "Day job and MAP responsibilities, typical work session"),
-    ("current-projects",        "Active projects, status, and priorities"),
-    ("team-and-relationships",  "Key people — wife, Dancescapes, day-job colleagues"),
-    ("tools-and-systems",       "Full tech stack — infra, core stack, integrations, dev tools"),
-    ("communication-style",     "How Kenny writes, formats, and prefers to communicate"),
-    ("goals-and-priorities",    "Primary goals, milestones, active problems, success criteria"),
+    ("current-projects", "Active projects, status, and priorities"),
+    ("team-and-relationships", "Key people — wife, Dancescapes, day-job colleagues"),
+    ("tools-and-systems", "Full tech stack — infra, core stack, integrations, dev tools"),
+    ("communication-style", "How Kenny writes, formats, and prefers to communicate"),
+    ("goals-and-priorities", "Primary goals, milestones, active problems, success criteria"),
     ("preferences-and-constraints", "Time, budget, AI, and infrastructure constraints"),
-    ("domain-knowledge",        "Areas of expertise and mental models"),
-    ("decision-log",            "How decisions are made and recent decisions taken"),
+    ("domain-knowledge", "Areas of expertise and mental models"),
+    ("decision-log", "How decisions are made and recent decisions taken"),
 ]
 
 logging.basicConfig(level=logging.INFO)
@@ -63,17 +63,15 @@ server = Server("context-portfolio")
 @server.list_resources()
 async def handle_list_resources() -> list[types.Resource]:
     """Expose each context file as a named MCP resource."""
-    resources = []
-    for key, description in FILES:
-        resources.append(
-            types.Resource(
-                uri=f"context://{key}",
-                name=key,
-                description=description,
-                mimeType="text/markdown",
-            )
+    return [
+        types.Resource(
+            uri=f"context://{key}",
+            name=key,
+            description=description,
+            mimeType="text/markdown",
         )
-    return resources
+        for key, description in FILES
+    ]
 
 
 @server.read_resource()
@@ -97,27 +95,17 @@ async def handle_list_tools() -> list[types.Tool]:
         types.Tool(
             name="list_files",
             description="List all available context file keys and their descriptions.",
-            inputSchema={
-                "type": "object",
-                "properties": {},
-                "required": [],
-            },
+            inputSchema={"type": "object", "properties": {}, "required": []},
         ),
         types.Tool(
             name="get_context",
-            description=(
-                "Return the content of a single context file by key. "
-                "Use list_files first if you're unsure of available keys."
-            ),
+            description="Return the content of a single context file by key.",
             inputSchema={
                 "type": "object",
                 "properties": {
                     "key": {
                         "type": "string",
-                        "description": (
-                            "The context file key, e.g. 'identity', "
-                            "'current-projects', 'tools-and-systems'."
-                        ),
+                        "description": "Context file key (e.g. 'identity').",
                     }
                 },
                 "required": ["key"],
@@ -125,24 +113,14 @@ async def handle_list_tools() -> list[types.Tool]:
         ),
         types.Tool(
             name="get_all_context",
-            description=(
-                "Return ALL 10 context files concatenated in order. "
-                "Use this to fully load Kenny's portfolio into context."
-            ),
-            inputSchema={
-                "type": "object",
-                "properties": {},
-                "required": [],
-            },
+            description="Return all context files concatenated in order.",
+            inputSchema={"type": "object", "properties": {}, "required": []},
         ),
     ]
 
 
 @server.call_tool()
-async def handle_call_tool(
-    name: str, arguments: dict
-) -> list[types.TextContent]:
-
+async def handle_call_tool(name: str, arguments: dict) -> list[types.TextContent]:
     if name == "list_files":
         lines = ["## Available Context Files\n"]
         for key, description in FILES:
@@ -151,25 +129,28 @@ async def handle_call_tool(
             lines.append(f"- **{key}**: {description}{status}")
         return [types.TextContent(type="text", text="\n".join(lines))]
 
-    elif name == "get_context":
+    if name == "get_context":
         key = arguments.get("key", "").strip()
         if not key:
             return [types.TextContent(type="text", text="Error: 'key' argument is required.")]
         if key not in valid_keys():
-            return [types.TextContent(
-                type="text",
-                text=f"Error: Unknown key '{key}'. Valid keys: {', '.join(valid_keys())}",
-            )]
+            return [
+                types.TextContent(
+                    type="text",
+                    text=f"Error: Unknown key '{key}'. Valid keys: {', '.join(valid_keys())}",
+                )
+            ]
         try:
-            content = read_file(key)
-            return [types.TextContent(type="text", text=content)]
+            return [types.TextContent(type="text", text=read_file(key))]
         except FileNotFoundError:
-            return [types.TextContent(
-                type="text",
-                text=f"Error: File for key '{key}' not found in {CONTEXT_DIR}.",
-            )]
+            return [
+                types.TextContent(
+                    type="text",
+                    text=f"Error: File for key '{key}' not found in {CONTEXT_DIR}.",
+                )
+            ]
 
-    elif name == "get_all_context":
+    if name == "get_all_context":
         parts = []
         for key, description in FILES:
             parts.append(f"\n\n---\n## [{key}] {description}\n")
@@ -179,8 +160,7 @@ async def handle_call_tool(
                 parts.append(f"_File not found: {file_path(key)}_")
         return [types.TextContent(type="text", text="".join(parts))]
 
-    else:
-        return [types.TextContent(type="text", text=f"Error: Unknown tool '{name}'.")]
+    return [types.TextContent(type="text", text=f"Error: Unknown tool '{name}'.")]
 
 
 # ── Entry point ───────────────────────────────────────────────────────────────
@@ -188,6 +168,7 @@ async def handle_call_tool(
 async def main():
     log.info("Context Portfolio MCP Server starting")
     log.info("Context directory: %s", CONTEXT_DIR)
+
     if not CONTEXT_DIR.exists():
         log.warning("Context directory does not exist: %s", CONTEXT_DIR)
     else:
@@ -205,7 +186,7 @@ async def main():
                 server_name="context-portfolio",
                 server_version="1.0.0",
                 capabilities=server.get_capabilities(
-                    notification_options=None,
+                    notification_options=NotificationOptions(),
                     experimental_capabilities={},
                 ),
             ),
