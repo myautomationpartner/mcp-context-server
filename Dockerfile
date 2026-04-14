@@ -1,23 +1,17 @@
 FROM python:3.12-slim
 
-# No interactive prompts during build
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
-
+# All app files live here
 WORKDIR /app
 
-# Install dependencies first (layer cache)
+# Install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy server code
-COPY server.py .
+# Copy the MCP server code
+COPY server.py /app/server.py
 
-# Context files are mounted at runtime — don't COPY them here
-# Mount a volume at /context when running the container
-RUN mkdir -p /context
+# Environment variable for context directory
+ENV CONTEXT_DIR=/context
 
-# MCP servers communicate over stdio — no exposed port needed.
-# If you need HTTP transport in the future, expose 8000.
-
-CMD ["python", "server.py"]
+# Default command (used by proxy via docker exec)
+CMD ["python", "/app/server.py"]
