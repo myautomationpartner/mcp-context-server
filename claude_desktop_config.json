@@ -1,0 +1,24 @@
+{
+  "_comment": "Add the 'context-portfolio' block into the mcpServers section of your existing claude_desktop_config.json. Replace YOUR_VPS_IP with your Hetzner VPS IP address.",
+  "_location_windows": "C:\\Users\\YOUR_USERNAME\\AppData\\Roaming\\Claude\\claude_desktop_config.json",
+  "_location_mac": "~/Library/Application Support/Claude/claude_desktop_config.json",
+
+  "mcpServers": {
+    "context-portfolio": {
+      "command": "ssh",
+      "args": [
+        "-o", "StrictHostKeyChecking=no",
+        "-o", "BatchMode=yes",
+        "root@YOUR_VPS_IP",
+        "docker exec -i context-mcp python /app/server.py"
+      ],
+      "_notes": [
+        "This uses SSH stdio proxying — no open port required on the VPS.",
+        "Your local SSH key must be in ~/.ssh/authorized_keys on the VPS.",
+        "BatchMode=yes prevents SSH from hanging waiting for a password prompt.",
+        "Replace root@YOUR_VPS_IP with your actual user and IP.",
+        "If your SSH key is not the default (~/.ssh/id_rsa), add: '-i', '/path/to/your/key'"
+      ]
+    }
+  }
+}

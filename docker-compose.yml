@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  context-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: context-mcp
+    image: context-mcp:latest
+    restart: unless-stopped
+
+    # Mount the context directory so you can update files without rebuilding
+    volumes:
+      - ./context:/context:ro
+
+    environment:
+      - CONTEXT_DIR=/context
+
+    # MCP over stdio — no port exposure needed for local/tunneled use.
+    # If you add HTTP transport later, uncomment:
+    # ports:
+    #   - "8811:8000"
+
+    # Resource limits — lightweight server
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 32M
+
+    # Health: just verify the process is alive
+    healthcheck:
+      test: ["CMD", "python", "-c", "import mcp; print('ok')"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
