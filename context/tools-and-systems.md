@@ -1,39 +1,30 @@
 # Tools & Systems
 
+Canonical live map: https://github.com/myautomationpartner/map-operating-system/blob/main/docs/LIVE.md
+
 ## Infrastructure
-- Hetzner VPS
-- Coolify
-- Docker
+- Hetzner VPS, Coolify, Docker
 
-## Core Stack
-- n8n (self-hosted)
-- Supabase
-- Cloudflare Pages
-- Cloudflare R2
+## Core stack
+- n8n (self-hosted at n8n.myautomationpartner.com)
+- Supabase (zgkxrlednyovuytaejok)
+- Cloudflare Pages, Workers, R2
 - GitHub
-- Tidio
-- Dropbox (temporary)
+- Chatwoot (inbox)
+- Zernio (social)
 
-## Integrations
-- Zernio (social media API layer)
+## Data flow
+Zernio → n8n → Supabase + R2
+GitHub → Cloudflare Pages / Workers
 
-## Development
-- Claude
-- Antigravity
-- plan.md (anchor)
-- Handoff documents
-- Multiple LLMs (rate-limit driven)
-
-## Data Flow
-Zernio → n8n → Supabase + R2  
-GitHub → Cloudflare Pages  
-Tidio / Dropbox → to be embedded
-
-## Dropped Tools
+## Dropped / not current
 - Metricool (replaced by n8n + Zernio)
+- Tidio (Chatwoot is the live inbox target)
+- Dropbox as the target upload path (R2 is)
+- Zite roles
 
-## Day Job Tools
-- Active Directory
-- Google Admin
-- Firewalls
-- Helpdesk
+## Not MAP
+Delphi / Pacesetter tooling is a different company.
+
+## Day job (not MAP)
+Active Directory, Google Admin, firewalls, helpdesk

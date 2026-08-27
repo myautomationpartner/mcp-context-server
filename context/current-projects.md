@@ -1,36 +1,18 @@
 # Current Projects
 
-## 1. Dancescapes — First Test Customer
-- **What it is:** Wife’s dance studio onboarding as first real customer
-- **Status:** In progress — Dropbox in use for uploads
-- **Kenny's role:** Sole builder
-- **Current focus:** Portal design and feature prioritization
-- **Done looks like:** Social posting, unified inbox, uploads, metrics live
-- **Priority:** Immediate
+Canonical live map: https://github.com/myautomationpartner/map-operating-system/blob/main/docs/LIVE.md
+(This public file used to be the AI handoff. It was four months stale. Trust the live map.)
 
-## 2. My Automation Partner — As Its Own Customer
-- **What it is:** Using the platform internally for MAP
-- **Status:** Next after Dancescapes
-- **Kenny's role:** Sole creator/user
-- **Done looks like:** Self-hosted growth + operations
-- **Priority:** Second
+## 1. Dancescapes — first customer
+Wife's dance studio. Tenant one. Live on `https://dancescapes.portal.myautomationpartner.com`. UX benchmark.
 
-## 3. My Automation Partner — Customer Portal
-- **What it is:** All-in-one operational portal for small businesses
-- **Key features:**
-  - Unified social posting & metrics
-  - Unified inbox (Tidio)
-  - Secure document storage
-  - Embedded customer file uploads
-  - Application hub
-- **Status:** Infra + workflows complete; portal build active
-- **Unsolved:**
-  - Tidio embedding
-  - Embedded file uploads (replacing Dropbox)
-- **Design principle:** Frictionless onboarding
-- **Priority:** Primary
+## 2. MAP as its own customer
+Second tenant: `my-automation-partner` at `https://myautomationpartner.com/portal/<slug>`.
 
-## 4. AI Context Continuity
-- **Problem:** Token/rate limits causing context loss
-- **Approach:** plan.md + handoff docs
-- **Priority:** High
+## 3. Customer portal
+Shared MAP portal for every customer. Not a custom site per client.
+Live: Chatwoot inbox, Zernio social, Supabase, n8n, Cloudflare.
+GitHub `map-portal` still contains Tidio/Dropbox leftovers. Live target is Chatwoot + R2.
+
+## Not MAP
+Delphi Processing / Pacesetter Payments is a separate company. Repos `pacesetter-payments` and `delphi-processing` are not this project.

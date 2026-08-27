@@ -1,25 +1,22 @@
 # Decision Log
 
-## How Decisions Are Made
-- Solo decisions
-- Cost + scalability driven
+Canonical live map: https://github.com/myautomationpartner/map-operating-system/blob/main/docs/LIVE.md
+
+## How decisions are made
+- Solo, cost + control
 - Build → test → iterate
-- Research-heavy
 
-## Recent Decisions
-- Dropped Metricool
-- Chose Hetzner + Coolify
-- Self-hosted n8n
-- Supabase free tier
-- Dancescapes first customer
-- Claude + Antigravity
+## Recent decisions
+- Dropped Metricool; Zernio-first social
+- Hetzner + Coolify + self-hosted n8n
+- Supabase as data/auth source of truth
+- Dancescapes first customer; shared portal design, not per-client theming
+- Chatwoot for inbox (Tidio is leftover)
+- 30-day cardless trial, then $25/month starter
+- Delphi / Pacesetter is a separate company, not MAP
+- Grok Bot roster: chief routes to MAP Portal, MAP Data, MAP Ops
 
-## In Progress
-- Portal design
-- Tidio/Dropbox replacement
-
-## Evaluation Criteria
-- Price
-- Scalability
-- Onboarding friction
-- Control
+## Open
+- Phone QA for Files/Inbox
+- Portal team-access branch
+- Supabase Data API grant hardening before 2026-10-30
