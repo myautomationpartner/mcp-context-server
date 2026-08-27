@@ -1,5 +1,10 @@
 # Context Portfolio MCP Server
 
+**Stale as a source of truth.** Current MAP picture is the private live map:
+https://github.com/myautomationpartner/map-operating-system/blob/main/docs/LIVE.md
+
+This server still serves the 10 markdown files below so old LLM clients keep working. Prefer the live map and Grok Bot (chief / MAP Portal / MAP Data / MAP Ops).
+
 A lightweight MCP (Model Context Protocol) server that serves your 10 personal context markdown files to any connected LLM client. Files are read from disk on every request — update them anytime without restarting.
 
 ---
